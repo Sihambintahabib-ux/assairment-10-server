@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "- Download vite for react: `npm create vite@latest my-react-project -- --template react` - Type for conformation : `y` - `cd my-project` - `npm install` - ` npm run dev` - Local: http://localhost:5173/ - Press ctrl+c to stop the live server - press `y then enter` to conform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongodb": "^7.0.0"
+  }
+}
