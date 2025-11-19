@@ -1,16 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 // assairment10
 // Y6PaRA9p7WhNsIyR
+// db_users = "assairment10";
 //* mondodb add Middleware :
+
 app.use(express.json());
 app.use(cors());
-const uri =
-  "mongodb+srv://assairment10:Y6PaRA9p7WhNsIyR@cluster0.hohlyvu.mongodb.net/?appName=Cluster0";
+const uri = `mongodb+srv://${process.env.db_users}:${process.env.db_passwrods}@cluster0.hohlyvu.mongodb.net/?appName=Cluster0`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -19,13 +21,14 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-console.log("object");
+console.log("88", process.env.db_users);
+console.log("===password===", process.env.db_passwrods);
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
@@ -59,7 +62,7 @@ async function run() {
     });
     app.put("/allimportsproducts/:id", async (req, res) => {
       const newProducts = req.body;
-      // const result = await importsCollection.insertOne(newProducts);
+      const result = await importsCollection.insertOne(newProducts);
       console.log(newProducts);
       // *
 
@@ -70,7 +73,7 @@ async function run() {
       const updateimport = {
         // $inc: { importquantity: importquantity.value },
         $inc: { importquantity: importedQuantity },
-        $set: newProducts,
+        // $set: newProducts,
       };
       const option = { upsert: true };
       const importcount = await productsCollection.updateOne(
@@ -82,14 +85,15 @@ async function run() {
       console.log(importcount);
       res.send({
         success: true,
-        // result,
+        result,
         importcount,
       });
       // console.log(result);
     });
     app.get("/my-import", async (req, res) => {
       const email = req.query.email;
-      console.log(email);
+      const userimportQuantity = req.query.importedQuantity;
+      console.log({ email, userimportQuantity });
       // const data = req.body;
       const query = {};
       if (email) {
@@ -150,7 +154,7 @@ async function run() {
         // .find({ createdBy: email })
 
         // .sort({ price: 1 })
-        // .sort({ createdAt: -1 })
+        .sort({ createdAt: -1 })
         // .skip(2)
         // .limit(6)
         // .project(projectfield);
@@ -162,8 +166,8 @@ async function run() {
     app.get("/latest-products", async (req, res) => {
       const result = await productsCollection
         .find()
-        .sort({ price: -1 })
-        // .sort({ createdAt: -1 })
+        // .sort({ price: -1 })
+        .sort({ createdAt: -1 })
         // .skip(2)
         .limit(6)
         .project()
@@ -198,6 +202,16 @@ async function run() {
       //   console.log(`Example app listening on port ${port}`);
       // });
     });
+    // all product search :
+
+    app.get("/search", async (req, res) => {
+      const search_text = req.query.search;
+      const result = await productsCollection
+        .find({ productName: { $regex: search_text, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
+
     app.delete("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };

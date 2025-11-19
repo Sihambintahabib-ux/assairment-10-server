@@ -411,6 +411,26 @@ run().catch(console.dir);
 
 ASSAIREMENT : 9
 git repo link : https://github.com/Sihambintahabib-ux/assairment-9.git
-
 <br>
 live link : https://sihambintahabib-assairment-9.surge.sh/services
+
+---
+
+ASSAIREMENT : 10
+client :
+git repo link : https://github.com/Sihambintahabib-ux/assairment-10-server.git
+<br>
+live link : https://sihambintahabib-assairment-10.surge.sh/services
+server :
+git repo link : https://github.com/Sihambintahabib-ux/assairment-10-client.git
+<br>
+live link : https://sihambintahabib-assairment-10.surge.sh/services
+
+---
+
+for serversite deployment : vercel
+`npm i -g vercel`
+`vercel`
+`vercel --prod`
+
+env file: ` npm i dotenv`
