@@ -60,6 +60,7 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
     app.put("/allimportsproducts/:id", async (req, res) => {
       const newProducts = req.body;
       const result = await importsCollection.insertOne(newProducts);
