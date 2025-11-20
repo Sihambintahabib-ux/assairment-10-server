@@ -52,15 +52,7 @@ async function run() {
         res.send(result);
       }
     });
-    //get my export from productcollection by email
-    app.get("/my-export", async (req, res) => {
-      const email = req.query.email;
-      const result = await productsCollection
-        .find({ createdBy: email })
-        .toArray();
-      res.send(result);
-    });
-
+    //*import :
     app.put("/allimportsproducts/:id", async (req, res) => {
       const newProducts = req.body;
       const result = await importsCollection.insertOne(newProducts);
@@ -91,6 +83,7 @@ async function run() {
       });
       // console.log(result);
     });
+    //*import :
     app.get("/my-import", async (req, res) => {
       const email = req.query.email;
       const userimportQuantity = req.query.importedQuantity;
@@ -107,18 +100,7 @@ async function run() {
 
       console.log(result);
     });
-    // app.get("/importsproducts", async (req, res) => {
-    //   const email = req.query.email;
-    //   const query = {};
-    //   if (email) {
-    //     query.createdBy = email;
-    //   }
-    //   const result = await importsCollection.find().toArray();
-    //   res.send({
-    //     success: true,
-    //     result,
-    //   });
-    // });
+    //*import :
     app.post("/my-import", async (req, res) => {
       const newProducts = req.body;
       const result = await importsCollection.insertOne(newProducts);
@@ -131,6 +113,7 @@ async function run() {
       res.send(result);
     });
 
+    //*all product load
     app.get("/products", async (req, res) => {
       // console.log(req.query);
       // const email = req.query.email;
@@ -165,6 +148,7 @@ async function run() {
       // const result = await cursor.toArray();
       res.send(result);
     });
+    //*6 product load
     app.get("/latest-products", async (req, res) => {
       const result = await productsCollection
         .find()
@@ -177,9 +161,9 @@ async function run() {
       // const result = await cursor.toArray();
       res.send(result);
     });
+    //*product details page
     app.get("/products/:id", async (req, res) => {
       const id = req.params;
-      // const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.findOne(query);
       res.send({
@@ -187,25 +171,22 @@ async function run() {
         result,
       });
     });
-    //add export :
+    //*add export :
     app.post("/products", async (req, res) => {
       const newProducts = req.body;
       const result = await productsCollection.insertOne(newProducts);
       console.log(result);
       res.send(result);
-      // res.send(newProducts);
-      // res.send(productsCollection.insertOne(newProducts));
-      // res.send("result");
-
-      // app.get("/", (req, res) => {
-      //   res.send("Hello World! Assairment 10 client side**");
-      // });
-
-      // app.listen(port, () => {
-      //   console.log(`Example app listening on port ${port}`);
-      // });
     });
-    // all product search :
+    //*get my export from productcollection by email
+    app.get("/my-export", async (req, res) => {
+      const email = req.query.email;
+      const result = await productsCollection
+        .find({ createdBy: email })
+        .toArray();
+      res.send(result);
+    });
+    //*all product search :
     app.get("/search", async (req, res) => {
       const search_text = req.query.search;
       const result = await productsCollection
@@ -213,7 +194,7 @@ async function run() {
         .toArray();
       res.send(result);
     });
-    // update export product :
+    //*update export product :
     app.put("/products/:id", async (req, res) => {
       const { id } = req.params;
       const data = req.body;
@@ -229,7 +210,7 @@ async function run() {
         result,
       });
     });
-
+    //*delete export product :
     app.delete("/products/:id", async (req, res) => {
       const { id } = req.params;
       const query = { _id: new ObjectId(id) };
@@ -239,6 +220,19 @@ async function run() {
         result,
       });
     });
+    // app.get("/importsproducts", async (req, res) => {
+    //   const email = req.query.email;
+    //   const query = {};
+    //   if (email) {
+    //     query.createdBy = email;
+    //   }
+    //   const result = await importsCollection.find().toArray();
+    //   res.send({
+    //     success: true,
+    //     result,
+    //   });
+    // });
+    console.log("010010");
     // app.patch("/products/:id", async (req, res) => {
     //   const id = req.params.id;
     //   const updatedproducts = req.body;
@@ -262,7 +256,7 @@ run().catch(console.dir);
 //*
 
 app.get("/", (req, res) => {
-  res.send("Hello World! Assairment 10 client side**");
+  res.send("Hello World! Assairment 10 client side");
 });
 
 app.listen(port, () => {
