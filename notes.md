@@ -1,14 +1,17 @@
-error :
+## error :
+
 require - express , cors
 finally no , use catch
-problem : ❌
+
+## problem : ❌
+
 !findone - not working
 !query search not working ✅
 !data fetch error show after login
 !jws , varify token , 10.2 - 1:3 ,
 !verse - deployment
 
-TASK :
+## TASK :
 
 - 55.5 55.6 - IMPORT EXPORTS
 - expalin query parameter(?) vs quary params(/)
@@ -16,6 +19,8 @@ TASK :
 - MIDDLEWARE ?
 - post vs put
 - .env file
+
+## prompt :
 
 ```
 i already have a products collections now i need to add exports FUNCTIONALITY . where people can add exports their own price for a product andother information take from a input from (a. Product Name

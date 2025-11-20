@@ -434,3 +434,6 @@ for serversite deployment : vercel
 `vercel --prod`
 
 env file: ` npm i dotenv`
+
+sweetalert :
+`npm install sweetalert2`

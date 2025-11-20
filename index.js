@@ -129,6 +129,7 @@ async function run() {
       const result = await importsCollection.deleteOne(query);
       res.send(result);
     });
+
     app.get("/products", async (req, res) => {
       // console.log(req.query);
       // const email = req.query.email;
@@ -185,6 +186,7 @@ async function run() {
         result,
       });
     });
+    //add export :
     app.post("/products", async (req, res) => {
       const newProducts = req.body;
       const result = await productsCollection.insertOne(newProducts);
@@ -203,7 +205,6 @@ async function run() {
       // });
     });
     // all product search :
-
     app.get("/search", async (req, res) => {
       const search_text = req.query.search;
       const result = await productsCollection
@@ -211,23 +212,42 @@ async function run() {
         .toArray();
       res.send(result);
     });
+    // update export product :
+    app.put("/products/:id", async (req, res) => {
+      const { id } = req.params;
+      const data = req.body;
+      // console.log(data);
+      // console.log(id);
+      const ObjId = new ObjectId(id);
+      const filter = { _id: ObjId };
+      const update = { $set: data };
+
+      const result = await productsCollection.updateOne(filter, update);
+      res.send({
+        success: true,
+        result,
+      });
+    });
 
     app.delete("/products/:id", async (req, res) => {
-      const id = req.params.id;
+      const { id } = req.params;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
-    app.patch("/products/:id", async (req, res) => {
-      const id = req.params.id;
-      const updatedproducts = req.body;
-      const query = { _id: new ObjectId(id) };
-      const update = {
-        $set: { name: updatedproducts.name, price: updatedproducts.price },
-      };
-      const result = await productsCollection.updateOne(query, update);
-      res.send(result);
-    });
+    // app.patch("/products/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const updatedproducts = req.body;
+    //   const query = { _id: new ObjectId(id) };
+    //   const update = {
+    //     $set: { name: updatedproducts.name, price: updatedproducts.price },
+    //   };
+    //   const result = await productsCollection.updateOne(query, update);
+    //   res.send(result);
+    // });
   } catch (error) {
     console.error("MongoDB connection error:", error);
     await client.close();
