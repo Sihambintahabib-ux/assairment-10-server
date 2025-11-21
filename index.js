@@ -35,7 +35,7 @@ async function run() {
     //* post connect:
     const db = client.db("all_products");
     const productsCollection = db.collection("products");
-    const exportsCollection = db.collection("exportsproducts");
+    // const exportsCollection = db.collection("exportsproducts");
     const importsCollection = db.collection("importsproducts");
     const usersCollection = db.collection("users");
 
@@ -52,37 +52,187 @@ async function run() {
         res.send(result);
       }
     });
-    //*import :
-    app.put("/allimportsproducts/:id", async (req, res) => {
-      const newProducts = req.body;
-      const result = await importsCollection.insertOne(newProducts);
-      console.log(newProducts);
-      // *
+    // //*import ::
+    // app.post("/allimportsproducts/:id", async (req, res) => {
+    //   const newProducts = req.body;
+    //   const id = req.params.id;
+    //   console.log(newProducts);
+    //   console.log(id);
 
-      const id = req.params.id;
-      console.log(id);
-      // const id = data._id;
-      const filter = { _id: new ObjectId(id) };
-      const updateimport = {
-        // $inc: { importquantity: importquantity.value },
-        $inc: { importquantity: importedQuantity },
-        // $set: newProducts,
-      };
-      const option = { upsert: true };
-      const importcount = await productsCollection.updateOne(
-        filter,
-        updateimport,
-        option
+    //   // *import collection add..
+    //   const result = await importsCollection.insertOne(newProducts);
+    //   // const id = data._id;
+    //   const filter = { productId: new ObjectId(id) };
+    //   const updateimport = {
+    //     // $inc: { importquantity: 1 },
+    //     $inc: { availableQuantity: -newProducts.importedQuantity },
+    //     // $inc: { importquantity: importedQuantity },
+    //     // $set: newProducts,
+    //   };
+    //   // const option = { upsert: true };
+    //   const importcount = await productsCollection.updateOne(
+    //     filter,
+    //     updateimport
+    //     // option
+    //   );
+    //   // *
+    //   console.log(importcount);
+    //   res.send({
+    //     success: true,
+    //     result,
+    //     importcount,
+    //   });
+    //   // console.log(result);
+    // });
+
+    //*dublicate import :
+    app.post("/allimportsproducts/:id", async (req, res) => {
+      const productId = req.params.id;
+      const importData = req.body;
+      // console.log(importData);
+      // console.log(id);
+
+      //!invalid data
+      if (!importData.importedQuantity || importData.importedQuantity <= 0) {
+        return res.status(400).send({
+          success: false,
+          error: "Invalid quantity",
+        });
+      }
+      //*find product query :
+      const query = { _id: new ObjectId(productId) };
+      //*find data
+      const product = await productsCollection.findOne(query);
+      //!product not found
+      if (!product) {
+        return res.status(404).send({
+          success: false,
+          error: "Product not found",
+        });
+      }
+      //!Check stock availability
+      if (product.availableQuantity < importData.importedQuantity) {
+        return res.status(400).send({
+          success: false,
+          error: `Not enough stock. Only ${product.availableQuantity} available`,
+        });
+      }
+      //  ! doublicate data checking, Check if user already imported this product
+      const existingImport = await importsCollection.findOne({
+        productID: productId, // Store as string for easy comparison
+        importedBy: importData.importedBy,
+      });
+      //*importResult variable declare
+      let importResult;
+      //*existing user :
+      if (existingImport) {
+        // ✅ UPDATE existing import (add to quantity)
+        const newTotalQuantity =
+          existingImport.importedQuantity + importData.importedQuantity;
+
+        importResult = await importsCollection.updateOne(
+          { _id: existingImport._id },
+          {
+            $set: {
+              importedQuantity: newTotalQuantity,
+              updatedAt: new Date(),
+            },
+          }
+        );
+      }
+      //*new usew :
+      else {
+        // ✅ CREATE new import
+        const newImport = {
+          productID: productId, // Store product ID as string
+          productName: importData.productName,
+          productImage: importData.productImage,
+          price: importData.price,
+          originCountry: importData.originCountry,
+          rating: importData.rating,
+          description: importData.description,
+          category: importData.category,
+          importedBy: importData.importedBy,
+          importedQuantity: importData.importedQuantity,
+          importedAt: new Date(),
+        };
+
+        // *import collection add..
+        importResult = await importsCollection.insertOne(newImport);
+        console.log("✅ Created new import");
+      }
+      // 5. Decrease product stock
+      const updateResult = await productsCollection.updateOne(
+        { _id: new ObjectId(productId) },
+        { $inc: { availableQuantity: -importData.importedQuantity } }
       );
-      // *
-      console.log(importcount);
       res.send({
         success: true,
-        result,
-        importcount,
+        message: "Product imported successfully",
+        importResult: importResult,
+        stockUpdate: updateResult,
       });
+      //?=======end=======
+      // *import collection add..
+      // const result = await importsCollection.insertOne(importData);
+      // const id = data._id;
+      // const filter = { _id: new ObjectId(productId) };
+      // const updateimport = {
+      //   // $inc: { importquantity: 1 },
+      //   $inc: { availableQuantity: -importData.importedQuantity },
+      //   // $inc: { importquantity: importedQuantity },
+      //   // $set: newProducts,
+      // };
+      // // const option = { upsert: true };
+      // const importcount = await productsCollection.updateOne(
+      //   filter,
+      //   updateimport
+      //   // option
+      // );
+      // *
+      // console.log(importcount);
+      // res.send({
+      //   success: true,
+      //   result,
+      //   importcount,
+      // });
       // console.log(result);
     });
+
+    //*import :: quantity filter
+    // app.put("/allimportsproducts/:id", async (req, res) => {
+    //   // const newProducts = req.body;
+    //   // const id = req.params.id;
+    //   // console.log(newProducts);
+    //   // console.log(id);
+
+    //   // *import collection add..
+
+    //   const result = await importsCollection.insertOne(newProducts);
+    //   // const id = data._id;
+    //   const filter = { productId: new ObjectId(id) };
+    //   const updateimport = {
+    //     // $inc: { importquantity: 1 },
+    //     $inc: { availableQuantity: -newProducts.importedQuantity },
+    //     // $inc: { importquantity: importedQuantity },
+    //     // $set: newProducts,
+    //   };
+    //   // const option = { upsert: true };
+    //   const importcount = await productsCollection.updateOne(
+    //     filter,
+    //     updateimport
+    //     // option
+    //   );
+    //   // *
+    //   console.log(importcount);
+    //   res.send({
+    //     success: true,
+    //     result,
+    //     importcount,
+    //   });
+    //   // console.log(result);
+    // });
+
     //*import :
     app.get("/my-import", async (req, res) => {
       const email = req.query.email;
@@ -100,7 +250,7 @@ async function run() {
 
       console.log(result);
     });
-    //*import :
+    //*import : not used
     app.post("/my-import", async (req, res) => {
       const newProducts = req.body;
       const result = await importsCollection.insertOne(newProducts);
@@ -191,6 +341,7 @@ async function run() {
       const search_text = req.query.search;
       const result = await productsCollection
         .find({ productName: { $regex: search_text, $options: "i" } })
+        .sort({ createdAt: -1 })
         .toArray();
       res.send(result);
     });
