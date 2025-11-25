@@ -109,7 +109,7 @@ cd dist
 surge
 ```
 
-### 2nd way :
+## 2nd way :
 
 ### Normal :
 
@@ -417,16 +417,19 @@ live link : https://sihambintahabib-assairment-9.surge.sh/services
 ---
 
 ASSAIREMENT : 10
+code : Code For Counting Ass-10 on 60 Marks : (marks60)-ass10#inc-ExM25
+
 client :
-git repo link : https://github.com/Sihambintahabib-ux/assairment-10-server.git
-<br>
-live link : https://sihambintahabib-assairment-10.surge.sh/services
-server :
 git repo link : https://github.com/Sihambintahabib-ux/assairment-10-client.git
 <br>
-live link : https://sihambintahabib-assairment-10.surge.sh/services
+live link : https://sihambintahabib-assairment10.surge.sh/
+<br>
+server :
+git repo link : https://github.com/Sihambintahabib-ux/assairment-10-server.git
+<br>
+live link : https://assairment10.vercel.app/
 
----
+## https://vercel.com/sihams-projects-0a3f7554/assairment10
 
 for serversite deployment : vercel
 `npm i -g vercel`
@@ -434,6 +437,10 @@ for serversite deployment : vercel
 `vercel --prod`
 
 env file: ` npm i dotenv`
+`require("dotenv").config();`
 
 sweetalert :
 `npm install sweetalert2`
+
+firebase-admin security to backend data :
+`npm i firebase-admin`

@@ -5,6 +5,16 @@ const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
+//*firebase authentication in serversite :
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+//*
+
 // assairment10
 // Y6PaRA9p7WhNsIyR
 // db_users = "assairment10";
@@ -91,9 +101,11 @@ async function run() {
       const importData = req.body;
       // console.log(importData);
       // console.log(id);
+      const importedQuantity = parseInt(importData.importedQuantity);
 
       //!invalid data
-      if (!importData.importedQuantity || importData.importedQuantity <= 0) {
+      //!invalid data
+      if (!importedQuantity || importedQuantity <= 0) {
         return res.status(400).send({
           success: false,
           error: "Invalid quantity",
@@ -111,7 +123,7 @@ async function run() {
         });
       }
       //!Check stock availability
-      if (product.availableQuantity < importData.importedQuantity) {
+      if (product.availableQuantity < importedQuantity) {
         return res.status(400).send({
           success: false,
           error: `Not enough stock. Only ${product.availableQuantity} available`,
@@ -121,6 +133,7 @@ async function run() {
       const existingImport = await importsCollection.findOne({
         productID: productId, // Store as string for easy comparison
         importedBy: importData.importedBy,
+        // availableQuantity: product.availableQuantity,
       });
       //*importResult variable declare
       let importResult;
@@ -129,6 +142,8 @@ async function run() {
         // ✅ UPDATE existing import (add to quantity)
         const newTotalQuantity =
           existingImport.importedQuantity + importData.importedQuantity;
+        // const newavailableQuantity =
+        //   existingImport.availableQuantity - importData.importedQuantity;
 
         importResult = await importsCollection.updateOne(
           { _id: existingImport._id },
@@ -136,6 +151,9 @@ async function run() {
             $set: {
               importedQuantity: newTotalQuantity,
               updatedAt: new Date(),
+              availableQuantity: parseInt(
+                product.availableQuantity - importData.importedQuantity
+              ),
             },
           }
         );
@@ -153,8 +171,14 @@ async function run() {
           description: importData.description,
           category: importData.category,
           importedBy: importData.importedBy,
-          importedQuantity: importData.importedQuantity,
+          importedQuantity: importedQuantity,
           importedAt: new Date(),
+          // availableQuantity: newavailableQuantity,
+          // availableQuantity:
+          //   product.availableQuantity - importData.importedQuantity,
+          availableQuantity: parseInt(
+            product.availableQuantity - importedQuantity
+          ),
         };
 
         // *import collection add..
@@ -164,7 +188,7 @@ async function run() {
       // 5. Decrease product stock
       const updateResult = await productsCollection.updateOne(
         { _id: new ObjectId(productId) },
-        { $inc: { availableQuantity: -importData.importedQuantity } }
+        { $inc: { availableQuantity: -importedQuantity } }
       );
       res.send({
         success: true,
