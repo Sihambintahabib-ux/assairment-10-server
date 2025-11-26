@@ -1,3 +1,15 @@
+## incomplete task :
+
+- .env file ✅
+- versel link add ❌❌
+- logout page problem ❌❌
+- extra 2 section in home page ❌
+- import limit rule ❌❌
+- update model open not page ❌
+- add footer section ❌
+- x logo ❌
+- make the website responsive ❌
+
 ## error :
 
 require - express , cors
@@ -5,14 +17,14 @@ finally no , use catch
 
 ## problem : ❌
 
-!findone - not working
-!query search not working ✅
-!data fetch error show after login
-!jws , varify token , 10.2 - 1:3 ,
-!verse - deployment
-!firebase perminion
-!deployment
-!! logot problem
+- !findone - not working
+- !query search not working ✅
+- !data fetch error show after login
+- !jws , varify token , 10.2 - 1:3 ,
+- !verse - deployment
+- !firebase perminion
+- !deployment
+- !! logot problem
 
 ## TASK :
 
@@ -21,7 +33,6 @@ finally no , use catch
 - what is primary key and what is foreign key
 - MIDDLEWARE ?
 - post vs put
-- .env file
 
 ## prompt :
 

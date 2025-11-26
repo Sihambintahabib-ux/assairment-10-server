@@ -157,7 +157,9 @@ async function run() {
             },
           }
         );
+        console.log(newTotalQuantity, availableQuantity);
       }
+
       //*new usew :
       else {
         // ✅ CREATE new import
