@@ -3,12 +3,12 @@
 - .env file ✅
 - versel link add ❌❌
 - logout page problem ❌❌
-- extra 2 section in home page ❌
+- extra 2 section in home page ✅
 - import limit rule ❌❌
 - update model open not page ❌
-- add footer section ❌
-- x logo ❌
-- make the website responsive ❌
+- add footer section ✅
+- x logo ✅
+- make the website responsive ✅
 
 ## error :
 

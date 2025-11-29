@@ -101,7 +101,7 @@ ReactDOM.createRoot(root).render(
 
 ## INSTRUCTION OF DEPLOY WEBSITE ON SURGE - DOWNLOAD SURGE (DONT USE POWERSHALL 💣✂)
 
-### 1st way :
+### 1st way : ❌
 
 ```
 npm install --global surge
@@ -111,7 +111,7 @@ surge
 
 ## 2nd way :
 
-### Normal :
+### Normal : ❌
 
 ---
 
@@ -123,7 +123,7 @@ npm run build
 surge dist
 ```
 
-### React :
+### React : ❌
 
 ---
 
@@ -146,7 +146,7 @@ surge dist
 
 ```
 
-### Custom Domain name :
+### Custom Domain name : ✅
 
 ---
 
@@ -172,7 +172,7 @@ surge dist
   **custom domain create process** :
   - create a folder in public folder and name it : `CNAME` , put the url : `sihambintahabib-assairment.surge.sh`
 
-### React_route + Firebase :
+### React_route + Firebase : ✅
 
 ---
 
