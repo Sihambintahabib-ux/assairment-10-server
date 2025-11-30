@@ -1,8 +1,8 @@
 ## incomplete task :
 
 - .env file ✅
-- versel link add ❌❌
-- logout page problem ❌❌
+- versel link add ✅
+- logout page problem ✅
 - extra 2 section in home page ✅
 - import limit rule ❌❌
 - update model open not page ❌
