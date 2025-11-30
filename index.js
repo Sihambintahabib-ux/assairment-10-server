@@ -103,37 +103,19 @@ async function run() {
       // console.log(id);
       const importedQuantity = parseInt(importData.importedQuantity);
 
-      //!invalid data
-      if (!importedQuantity || importedQuantity <= 0) {
-        return res.status(400).send({
-          success: false,
-          error: "Invalid quantity",
-        });
-      }
       //*find product query :
       const query = { _id: new ObjectId(productId) };
       //*find data
       const product = await productsCollection.findOne(query);
-      //!product not found
-      if (!product) {
-        return res.status(404).send({
-          success: false,
-          error: "Product not found",
-        });
-      }
-      //!Check stock availability
-      if (product.availableQuantity < importedQuantity) {
-        return res.status(400).send({
-          success: false,
-          error: `Not enough stock. Only ${product.availableQuantity} available`,
-        });
-      }
+      //======END======
+
       //  ! doublicate data checking, Check if user already imported this product
       const existingImport = await importsCollection.findOne({
         productID: productId, // Store as string for easy comparison
         importedBy: importData.importedBy,
         // availableQuantity: product.availableQuantity,
       });
+
       //*importResult variable declare
       let importResult;
       //*existing user :
