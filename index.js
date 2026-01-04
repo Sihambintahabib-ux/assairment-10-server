@@ -63,6 +63,20 @@ async function run() {
         res.send(result);
       }
     });
+    // ! updata user
+    app.patch("/user/:email", async (req, res) => {
+      const { displayName, photoURL, email, role, lastloggedAt } = req.body;
+      // const clubId = req.params.id;
+
+      // const email = req.params.email;
+      const result = await userCollection.updateMany(
+        { email: email },
+        // { _id: new ObjectId(clubId) },
+        { $set: { displayName, photoURL, role, lastloggedAt: new Date() } }
+      );
+      console.log(result);
+      res.send(result);
+    });
     //* get user role from userCollection
     app.get("/user/role/:email", async (req, res) => {
       const email = req.params.email;
