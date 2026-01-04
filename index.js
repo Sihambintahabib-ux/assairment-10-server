@@ -316,6 +316,20 @@ async function run() {
 
       console.log(result);
     });
+    //! STATISTICS : ASS 10 POLISH SCIC
+    app.get("/importproducts", async (req, res) => {
+      try {
+        const result = await importsCollection
+          .find()
+          .sort({ importedAt: -1 })
+          .toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching import products:", error);
+        res.status(500).send({ error: "Failed to fetch import products" });
+      }
+    });
+
     //*import : not used
     app.post("/my-import", async (req, res) => {
       const newProducts = req.body;
