@@ -50,8 +50,9 @@ async function run() {
     const usersCollection = db.collection("users");
 
     //* user collection connect :
-    app.post("/users", async (req, res) => {
+    app.post("/user", async (req, res) => {
       const newusers = req.body;
+      console.log(newusers);
       const email = req.body.email;
       const query = { email: email };
       const existingusers = await usersCollection.findOne(query);
@@ -62,6 +63,64 @@ async function run() {
         res.send(result);
       }
     });
+    //* get user role from userCollection
+    app.get("/user/role/:email", async (req, res) => {
+      const email = req.params.email;
+      // const email = email: req.tokenEmail ;
+
+      const result = await usersCollection.findOne({ email: email });
+      res.send({ role: result?.role });
+    });
+
+    //* statisctics :
+    app.get("/member/stats/:email", async (req, res) => {
+      const email = req.params.email;
+      // const productsCollection = db.collection("products");
+      // // const exportsCollection = db.collection("exportsproducts");
+      // const importsCollection = db.collection("importsproducts");
+      // const usersCollection = db.collection("users");
+      try {
+        const [
+          productsCount,
+          importsCount,
+          // eventsRegCount,
+          // membershipsCount,
+          // paymentsCount,
+          usersCount,
+        ] = await Promise.all([
+          productsCollection.countDocuments({ createdBy: email }),
+          importsCollection.countDocuments({ importedBy: email }),
+          //  eventsRegistrationCollection.countDocuments({ userEmail: email }),
+          //  membershipsCollection.countDocuments({ userEmail: email }), //*
+          //  paymentsCollection.countDocuments({ userEmail: email }),
+          // usersCollection.countDocuments({ email : email }),
+        ]);
+
+        const counts = {
+          products: productsCount,
+          imports: importsCount,
+          // eventsRegistration: eventsRegCount,
+          // memberships: membershipsCount,
+          // payments: paymentsCount,
+          // users: usersCount,
+          // total:
+          //   productsCount +
+          //   importsCount +
+          //   // eventsRegCount +
+          //   // membershipsCount +
+          //   // paymentsCount +
+          //   usersCount,
+        };
+
+        res.json(counts);
+      } catch (err) {
+        console.error("Error fetching counts:", err);
+        res
+          .status(500)
+          .json({ error: "Failed to fetch counts", message: err.message });
+      }
+    });
+
     // //*import ::
     // app.post("/allimportsproducts/:id", async (req, res) => {
     //   const newProducts = req.body;
